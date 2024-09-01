@@ -12,6 +12,62 @@ https://states-language.net/
 ```
 This restricts the output data set into the State machine to only the application output. Without the above line, all the system meta-data will also be added along with the application data
 
+Similarly, we have this inside the map/ parallel processing task
+```
+"OutputPath": "$.Payload.body.square",
+```
+This filters down the output of the parallel processing stage to 
+```
+[
+  7396,
+  2116,
+  1521,
+  196,
+  3025
+]
+```
+Instead, if we had this line of code
+```
+"OutputPath": "$.Payload",
+```
+we would see the task generating output like this
+```
+[
+  {
+    "statusCode": 200,
+    "body": {
+      "square": 1089
+    }
+  },
+  {
+    "statusCode": 200,
+    "body": {
+      "square": 1444
+    }
+  },
+  {
+    "statusCode": 200,
+    "body": {
+      "square": 8649
+    }
+  },
+  {
+    "statusCode": 200,
+    "body": {
+      "square": 784
+    }
+  },
+  {
+    "statusCode": 200,
+    "body": {
+      "square": 49
+    }
+  }
+] 
+```
+
+
+
 ## What is the purpose of this code, insided the parameters block?
 ```
 "Payload.$": "$",
@@ -36,6 +92,42 @@ The below construct achieves the same as above
 "InputPath": "$.body",
 "ItemsPath": "$.randomList",
 ```
+
+## Input Structure Refactoring: What is the purpose of the below line of code, contained within the subsequent block?
+
+```
+"number.$": "$"
+```
+
+inside
+
+```
+          "SquareNumbers": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "OutputPath": "$.Payload.body.square",
+            "Parameters": {
+              "FunctionName": "arn:aws:lambda:us-east-1:819215969217:function:NumberSquarer:$LATEST",
+              "Payload": {
+                "number.$": "$"
+              }
+            }
+```
+
+Answer: It transforms the loop value of the iteration into the format that the Lambda wants.
+
+1. The map state itself gets a list of numbers like [2, 33, 7......]
+2. Each iteration of this list by itself will create an input like {2}, {33}, {7} ...
+3. That line will refactor this input such that, each invocation of the lambda will receive a dict like {"number": 2}, {"number": 33}, {"number": 7} ...
+
+
+
+
+
+
+
+ 
+
 
 ## Map state processing modes
 

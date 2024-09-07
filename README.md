@@ -8,7 +8,18 @@ https://states-language.net/
 
 ## Advanced view of the Task states
 
-Use the Advanced View to examine Task Inputs and Outputs. Sometimes the regular view doesn't refresh.
+In the UI. Use the Advanced View to examine Task Inputs and Outputs. Sometimes the regular view doesn't refresh.
+
+## Manipulating the task-level state ($) and full state ($$)
+
+'$' gives access to the task level input. This will be illustrated in several examples below.
+
+'$$' will give access to the entire step function invocation input including metadata. 
+e.g. this is a way of getting the Step-function's invocation name and passing to the lambda as a parameter calle invocation:
+
+```
+ "invocation.$": "$$.Execution.Name"
+```
 
 ## Output Filtering/ Metadata culling: What is the purpose of this code? 
 ```
@@ -70,33 +81,6 @@ we would see the task generating output like this
 ] 
 ```
 
-
-
-## What is the purpose of this code, insided the parameters block?
-```
-"Payload.$": "$",
-```
-Based on my experiments, it seems to be redundant. Removing it is causing no effect on the input.
-
-## What is the purpose of these lines of code, inside a parallel processing block?
-```
-"Type": "Map",
-"InputPath": "$.body.randomList",
-"ItemsPath": "$",
-```
-
-The first line says that this would be a parallel iteration task. 
-The second line filters or culls the state input down to just the randomList field inside the body object.
-The third line specifies which field should be used for iteration. In this case, we have already used InputPath to narrow the data down to the list. So, iteration can be done directly on what is received; this is specified by $
-
-The below construct achieves the same as above
-
-```
-"Type": "Map",
-"InputPath": "$.body",
-"ItemsPath": "$.randomList",
-```
-
 ## Input Structure Refactoring: What is the purpose of the below line of code, contained within the subsequent block?
 
 ```
@@ -128,17 +112,50 @@ Answer: It transforms the loop value of the iteration into the format that the L
 ```
 {2}, {33}, {7} ...
 ```
-3. That line will refactor this input such that, each invocation of the lambda will receive a dict like 
+3. The line "number.$": "$" will refactor this input such that, each invocation of the lambda will receive a dict like 
 ```
 {"number": 2}, {"number": 33}, {"number": 7} ...
 ```
 
+## Static Inputs
 
+1. You can define static inputs to the tasks/lambdas, the static inputs can also be inside a static json structure:
 
+In the below example, the lambda will always receive an input parameter called illustrative_static_input with value 100. The second parameter is a static nested one.
+```
+      "Parameters": {
+        "Payload": {          
+          "illustrative_static_input": 100,
+          "illustrative_static_nested_input": {
+            "nested_field": "200"
+          },
+```
 
+## What is the purpose of this code, insided the (input) parameters block?
+```
+"Payload.$": "$",
+```
+Based on my experiments, it seems to be redundant. Removing it is causing no effect on the input. The nature of term "Payload" on the input side is not clear. In some versions, it is treated as a keyword and in some versions it is treated as just another input.
 
+## What is the purpose of these lines of code, inside a parallel processing block?
+```
+"Type": "Map",
+"InputPath": "$.body.randomList",
+"ItemsPath": "$",
+```
 
- 
+The first line says that this would be a parallel iteration task. 
+The second line filters or culls the state input down to just the randomList field inside the body object.
+The third line specifies which field should be used for iteration. In this case, we have already used InputPath to narrow the data down to the list. So, iteration can be done directly on what is received; this is specified by $
+
+The below construct achieves the same as above
+
+```
+"Type": "Map",
+"InputPath": "$.body",
+"ItemsPath": "$.randomList",
+```
+
 
 
 ## Map state processing modes

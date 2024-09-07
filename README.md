@@ -10,7 +10,7 @@ https://states-language.net/
 
 In the UI. Use the Advanced View to examine Task Inputs and Outputs. Sometimes the regular view doesn't refresh.
 
-## Manipulating the task-level state ($) and full state ($$)
+## Manipulating the task-level state ('$') and full state ('$$')
 
 '$' gives access to the task level input. This will be illustrated in several examples below.
 

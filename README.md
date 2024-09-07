@@ -116,10 +116,18 @@ inside
 
 Answer: It transforms the loop value of the iteration into the format that the Lambda wants.
 
-1. The map state itself gets a list of numbers like [2, 33, 7......]
-2. Each iteration of this list by itself will create an input like {2}, {33}, {7} ...
-3. That line will refactor this input such that, each invocation of the lambda will receive a dict like {"number": 2}, {"number": 33}, {"number": 7} ...
-
+1. The map state itself gets a list of numbers like 
+```
+[2, 33, 7......]
+```
+2. Each iteration of this list by itself will create an input like 
+```
+{2}, {33}, {7} ...
+```
+3. That line will refactor this input such that, each invocation of the lambda will receive a dict like 
+```
+{"number": 2}, {"number": 33}, {"number": 7} ...
+```
 
 
 

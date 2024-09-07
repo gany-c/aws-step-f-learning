@@ -6,6 +6,10 @@ This is for learning AWS States language and iteration inside step functions.
 
 https://states-language.net/
 
+## Advanced view of the Task states
+
+Use the Advanced View to examine Task Inputs and Outputs. Sometimes the regular view doesn't refresh.
+
 ## Output Filtering/ Metadata culling: What is the purpose of this code? 
 ```
 "OutputPath": "$.Payload",

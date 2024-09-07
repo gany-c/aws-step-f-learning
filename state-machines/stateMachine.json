@@ -1,5 +1,5 @@
 {
-  "Comment": "A description of my state machine",
+  "Comment": "A description of my state machine. Fields prefixed as 'illustrative' are just examples, not used by the Lambda",
   "StartAt": "Generate List",
   "States": {
     "Generate List": {
@@ -27,8 +27,8 @@
     },
     "Parallel Process": {
       "Type": "Map",
-      "InputPath": "$.body.randomList",
-      "ItemsPath": "$",
+      "InputPath": "$.body",
+      "ItemsPath": "$.randomList",
       "ItemProcessor": {
         "ProcessorConfig": {
           "Mode": "INLINE"
@@ -69,8 +69,15 @@
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "Payload": {
-          "squares.$": "$"
+        "Payload": {          
+          "illustrative_static_input": 100,
+          "illustrative_static_nested_input": {
+            "nested_field": "200"
+          },
+          "illustrative_wrapper":{
+            "invocation.$": "$$"
+          } ,
+          "squares.$": "$"          
         },
         "FunctionName": "arn:aws:lambda:us-east-1:819215969217:function:ListSummation:$LATEST"
       },

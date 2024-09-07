@@ -75,7 +75,7 @@
             "nested_field": "200"
           },
           "illustrative_wrapper":{
-            "invocation.$": "$$"
+            "invocation.$": "$$.Execution.Name"
           } ,
           "squares.$": "$"          
         },
